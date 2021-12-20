@@ -1,16 +1,11 @@
-#### Uma API usando Clojure
-Neste projeto irei desenvolver uma API Rest utilizando o Clojure e algumas bibliotecas bem legais. 
-O projeto também irá utilizar o Datomic e tem como objetivo colocar em prática alguns conhecimentos obtidos durante os meus estudos até aqui.
+#### API e Microsserviços com Clojure
+Este repositório apresenta dois projetos com o intúito de colocar alguns conhecimentos em prática. Temos dois serviços responsáveis pelo cadastro de um usuário e o cálculo de Score a fim de identificar se podemos ou não disponibilizar um cartão de crédio para um usuário. 
 
-#### Como executar
-Irei partir do princípio que você já aprendeu a rodar um projeto usando o Leiningen e com isso iremos pular essa parte. O mesmo serve para o Datomic.
+Eeste projeto usa algumas bibliotescas bem legais:
+- https://github.com/dakrone/clj-http
+- https://github.com/ring-clojure/ring
+- https://github.com/dakrone/cheshire
 
-Acesse o diretório onde o arquivo `project.clj` se encontra e execute o seguinte comando:
-```bash
-lein run
-```
-Assim que o projeto for executado, podemos acessar a nossa API na seguinte URL: `http://127.0.0.1:3000/`.
-
------
+Por hora, usamos o **clj-http** para comunicação entre serviços. O próximo passo é evoluir para a utilização de eventos com o uso de Kafka.
 
 Em breve eu devo apresentar o restante da documentação :)
