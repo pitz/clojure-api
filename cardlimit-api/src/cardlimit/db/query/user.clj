@@ -1,6 +1,7 @@
 (ns cardlimit.db.query.user
   (:use clojure.pprint)
-  (:require [datomic.api :as d]))
+  (:require [cardlimit.utils.utils :as utils]
+            [datomic.api           :as d]))
 
 (defn query [conn]
   (let [database (d/db conn)]
@@ -17,5 +18,14 @@
                       :in    $ ?id
                       :where [?user :user/id   ?id]
                              [?user :user/name ?name]
-                             [?user :user/cpf  ?cpf]] database id))]
+                             [?user :user/cpf  ?cpf]] database (utils/uuid-from-string id)))]
     (first users)))
+
+(defn is-cpf-already-in-use? [conn cpf]
+  (let [count-id (let [database (d/db conn)]
+                (d/q '[:find   (count ?id)
+                       :in    $ ?cpf
+                       :where [?user :user/id   ?id]
+                              [?user :user/name ?name]
+                              [?user :user/cpf  ?cpf]] database cpf))]
+    (or (nil? (first count-id)) (> (first count-id) 0))))
