@@ -1,11 +1,12 @@
 (ns cardlimit.user.userlogic
   (:use clojure.pprint)
-  (:require [cardlimit.db.config-db   :as db]
-            [cardlimit.utils.utils   :as utils]
-            [cardlimit.schemata      :as c.schenata]
-            [cardlimit.db.query.user :as user-db]
-            [datomic.api             :as d]
-            [schema.core             :as s])
+  (:require [cardlimit.db.config-db                   :as db]
+            [cardlimit.utils.utils                   :as utils]
+            [cardlimit.schemata                      :as c.schenata]
+            [cardlimit.db.query.user                 :as user-db]
+            [cardlimit.httprequest.score-api-manager :as c.score-http-manager]
+            [datomic.api                             :as d]
+            [schema.core                             :as s])
   (:import (java.util UUID)))
 
 (s/defn create-user :- c.schenata/User [name :- s/Str, cpf :- s/Str]
@@ -38,6 +39,7 @@
 
   (let [user (create-user name cpf)]
     @(d/transact (db/connect-to-db) [user])
+    (c.score-http-manager/calculate-score user)
     user))
 
 (defn list-users []        (user-db/query    (db/connect-to-db)))

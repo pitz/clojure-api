@@ -4,7 +4,7 @@
             [schema.core :as s]
             [cardlimit.schemata :as c.schemata]))
 
-(def db-uri "datomic:dev://localhost:4334/cardlimit")
+(def db-uri "datomic:dev://localhost:4334/score")
 
 (defn connect-to-db []
   (d/create-database db-uri)

@@ -4,7 +4,7 @@
   "Calculdor de Score de usuários por meio de consultas externas"
 
   ; Calcula Score de usuários em batch
-  (calculate!  [this user])
+  (calculate! [this conn user-id user-cpf])
 
   ; Exibe relatório de scores calculados
   (print-score [this])
