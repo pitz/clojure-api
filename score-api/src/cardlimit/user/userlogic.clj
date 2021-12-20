@@ -26,10 +26,6 @@
       (throw (Exception. "O CPF do usuário precisa ser informado."))))
 
   (let [cpf-already-used (user-db/is-cpf-already-in-use? (db/connect-to-db) cpf)]
-
-    (println cpf-already-used)
-    (println (type cpf-already-used))
-
     (if cpf-already-used
       (throw (Exception. "O CPF informado já está em uso.")))))
 

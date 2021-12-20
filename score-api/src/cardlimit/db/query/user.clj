@@ -28,4 +28,4 @@
                        :where [?user :user/id   ?id]
                               [?user :user/name ?name]
                               [?user :user/cpf  ?cpf]] database cpf))]
-    (not-empty count-id)))
+    (or (nil? (first count-id)) (> (first count-id) 0))))
