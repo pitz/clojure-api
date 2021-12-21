@@ -28,20 +28,18 @@
     (.subscribe consumer [topic]))
 
   (run-consumer [this server-url]
-    (let [consumer-topic   "cardlimit.created.user"
-          producer-topic   "example-produced-topic"
+    (let [consumer-topic   "calculated-score"
           bootstrap-server server-url
           consumer         (c.kafkaprotocol/build-consumer this bootstrap-server)]
 
-      (c.kafkaprotocol/create-topics! this bootstrap-server [producer-topic consumer-topic] 1 1)
+      (c.kafkaprotocol/create-topics! this bootstrap-server [consumer-topic] 1 1)
       (c.kafkaprotocol/consumer-subscribe this consumer consumer-topic)
 
       (while true
         (let [records (.poll consumer (Duration/ofMillis 100))]
           (doseq [record records]
             (println " ... @ processando: " (str (.value record)))
-            (.commitAsync consumer)
-            ))))))
+            (.commitAsync consumer)))))))
 
 (defrecord KafkaProducerManager [] c.kafkaprotocol/KafkaProducerManagerProtocol
 

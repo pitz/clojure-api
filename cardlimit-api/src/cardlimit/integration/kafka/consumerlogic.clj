@@ -4,9 +4,6 @@
             [cardlimit.integration.kafka.protocols.kafka :as c.kafkaprotocols]))
 
 (defn consume []
-  (println " ... ")
-  (println " ... (criando consumer) ")
-
   (let [kafka-consumer (c.kafkarecords/->KafkaConsumerManager)]
     (dosync
       (c.kafkaprotocols/run-consumer kafka-consumer "localhost:9092"))))

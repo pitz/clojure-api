@@ -1,12 +1,13 @@
 (ns cardlimit.user.userlogic
   (:use clojure.pprint)
-  (:require [cardlimit.db.config-db                     :as db]
-            [cardlimit.utils.utils                     :as utils]
-            [cardlimit.schemata                        :as c.schenata]
-            [cardlimit.db.query.user                   :as user-db]
+  (:require [cardlimit.db.config-db :as db]
+            [cardlimit.utils.utils :as utils]
+            [cardlimit.schemata :as c.schenata]
+            [cardlimit.db.query.user :as user-db]
             [cardlimit.integration.kafka.producerlogic :as c.kafka-producer]
-            [datomic.api                               :as d]
-            [schema.core                               :as s])
+            [datomic.api :as d]
+            [schema.core :as s]
+            [clojure.data.json :as json])
   (:import (java.util UUID)))
 
 (s/defn create-user :- c.schenata/User [name :- s/Str, cpf :- s/Str]
@@ -31,7 +32,7 @@
       (throw (Exception. "O CPF informado já está em uso.")))))
 
 (s/defn send-user-created-event [user]
-  (c.kafka-producer/send-message "cardlimit.created.user" (str user)))
+  (c.kafka-producer/send-message "cardlimit.created.user" (str (json/write-str user))))
 
 (s/defn save-user :- c.schenata/User [name, cpf]
   (validate-user name cpf)

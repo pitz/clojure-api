@@ -1,4 +1,4 @@
-(ns cardlimit.integration.score-api-manager
+(ns cardlimit.integration.http.score-api-manager
   (:use clojure.pprint)
   (:require [clj-http.client :as client]))
 
