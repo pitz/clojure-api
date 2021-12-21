@@ -1,10 +1,11 @@
-(ns cardlimit.integration.kafka.records.kafka
+(ns cardlimit.integration.kafka.consumer.records.manager
   (:gen-class)
-  (:require [cardlimit.integration.kafka.protocols.kafka :as c.kafkaprotocol])
+  (:require [cardlimit.integration.kafka.consumer.protocols.manager-protocol :as c.kafkaprotocol]
+            [clojure.data.json                                               :as json]
+            [cardlimit.score.scorelogic                                      :as c.scorelogic])
   (:import  [org.apache.kafka.clients.admin AdminClientConfig NewTopic KafkaAdminClient]
             org.apache.kafka.clients.consumer.KafkaConsumer
-            [org.apache.kafka.clients.producer KafkaProducer ProducerRecord]
-            [org.apache.kafka.common.serialization StringDeserializer StringSerializer]
+            [org.apache.kafka.common.serialization StringDeserializer]
             (java.time Duration)))
 
 (defrecord KafkaConsumerManager [] c.kafkaprotocol/KafkaConsumerManagerProtocol
@@ -39,17 +40,8 @@
       (while true
         (let [records (.poll consumer (Duration/ofMillis 100))]
           (doseq [record records]
-            (println " ... @ processando: " (str (.value record)))
-            (.commitAsync consumer)
-            ))))))
+            (let [user-id  (get (json/read-str (str (.value record))) "id")
+                  user-cpf (get (json/read-str (str (.value record))) "cpf")]
+              (c.scorelogic/analyse-user user-id user-cpf))
 
-(defrecord KafkaProducerManager [] c.kafkaprotocol/KafkaProducerManagerProtocol
-
-  (build-producer [this bootstrap-server]
-    (let [producer-props {"value.serializer"  StringSerializer
-                          "key.serializer"    StringSerializer
-                          "bootstrap.servers" bootstrap-server}]
-      (KafkaProducer. producer-props)))
-
-  (send-message [this producer topic message-key message]
-    @(.send producer (ProducerRecord. topic message-key message))))
+            (.commitAsync consumer)))))))

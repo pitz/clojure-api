@@ -1,11 +1,11 @@
 (ns cardlimit.core
   (:use clojure.pprint)
-  (:require [cardlimit.db.config-db                     :as db]
-            [cardlimit.routes.routes                   :as c.routes]
-            [cardlimit.integration.kafka.consumerlogic :as c.kafka-consumer]
-            [org.httpkit.server                        :as server]
-            [compojure.core                            :refer :all]
-            [ring.middleware.defaults                  :refer :all])
+  (:require [cardlimit.db.config-db                      :as db]
+            [cardlimit.routes.routes                    :as c.routes]
+            [cardlimit.integration.kafka.consumer.logic :as c.kafka-consumer]
+            [org.httpkit.server                         :as server]
+            [compojure.core                             :refer :all]
+            [ring.middleware.defaults                   :refer :all])
   (:gen-class))
 
 ;(db/apagar-bd)

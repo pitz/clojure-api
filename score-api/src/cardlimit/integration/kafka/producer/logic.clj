@@ -1,13 +1,10 @@
-(ns cardlimit.integration.kafka.producerlogic
+(ns cardlimit.integration.kafka.producer.logic
   (:gen-class)
-  (:require [cardlimit.integration.kafka.records.kafka   :as c.kafkarecords]
-            [cardlimit.integration.kafka.protocols.kafka :as c.kafkaprotocols])
+  (:require [cardlimit.integration.kafka.producer.records.manager            :as c.kafkarecords]
+            [cardlimit.integration.kafka.producer.protocols.manager-protocol :as c.kafkaprotocols])
   (:import (java.util UUID)))
 
 (defn send-message [topic message]
-  (println " ... ")
-  (println " ... (criando consumer) ")
-
   (let [kafka-producer (c.kafkarecords/->KafkaProducerManager)
         producer       (c.kafkaprotocols/build-producer kafka-producer "localhost:9092")
         message-id     (str (UUID/randomUUID))]

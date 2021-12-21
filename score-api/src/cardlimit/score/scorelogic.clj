@@ -6,8 +6,7 @@
             [schema.core                               :as s]))
 
 (s/defn analyse-user [user-id user-cpf]
-  (println " @ analyse-user : user-id  " user-id)
-  (println " @ analyse-user : user-cpf " user-cpf)
+  (println "[>] Calculando score para o CPF" user-cpf "(id:" user-id ").")
 
   (let [serasa-calculator (c.sr-scorelogic/->SerasaScoreCalculator)]
     (dosync
