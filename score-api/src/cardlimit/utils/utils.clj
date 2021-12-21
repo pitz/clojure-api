@@ -28,5 +28,5 @@
     (slurp rdr)))
 
 (defn get-parameter [req pname] (get (:params req) pname))
-(defn get-body      [req]       (json/read-str (is->str (:body req)) :key-fn keyword))
+(defn get-body      [req] (json/read-str (is->str (:body req)) :key-fn keyword))
 

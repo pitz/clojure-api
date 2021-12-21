@@ -4,6 +4,7 @@
             [cardlimit.score.protocols.score            :as c.score]
             [cardlimit.utils.utils                      :as utils]
             [cardlimit.integration.kafka.producer.logic :as c.producer]
+            [cardlimit.integration.http.serasa.manager  :as c.serasamanager]
             [datomic.api                                :as d]
             [schema.core                                :as s]
             [clojure.data.json                          :as json]))
@@ -19,13 +20,13 @@
     (< score upmarket-user-minimum-score) (assoc c.model/platinum-user-values :userscore/score score :userscore/calculator :serasa)
     :else                                 (assoc c.model/upmarket-user-values :userscore/score score :userscore/calculator :serasa)))
 
-(s/defn calculate-score-index []
-  (rand-int 100))
+(s/defn calculate-score-index [user-id user-cpf]
+  (c.serasamanager/calculate-score user-id user-cpf))
 
 (defrecord SerasaScoreCalculator [] c.score/ScoreCalculator
 
   (calculate! [this conn user-id user-cpf]
-    (let [score-index (calculate-score-index)
+    (let [score-index (calculate-score-index user-id user-cpf)
           score       (get-score-band score-index)
           score       (assoc score :userscore/user-id (utils/uuid-from-string user-id))
           score       (assoc score :userscore/user-cpf user-cpf)
