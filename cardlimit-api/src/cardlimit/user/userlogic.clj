@@ -1,12 +1,12 @@
 (ns cardlimit.user.userlogic
   (:use clojure.pprint)
-  (:require [cardlimit.db.config-db                   :as db]
-            [cardlimit.utils.utils                   :as utils]
-            [cardlimit.schemata                      :as c.schenata]
-            [cardlimit.db.query.user                 :as user-db]
-            [cardlimit.httprequest.score-api-manager :as c.score-http-manager]
-            [datomic.api                             :as d]
-            [schema.core                             :as s])
+  (:require [cardlimit.db.config-db                     :as db]
+            [cardlimit.utils.utils                     :as utils]
+            [cardlimit.schemata                        :as c.schenata]
+            [cardlimit.db.query.user                   :as user-db]
+            [cardlimit.integration.kafka.producerlogic :as c.kafka-producer]
+            [datomic.api                               :as d]
+            [schema.core                               :as s])
   (:import (java.util UUID)))
 
 (s/defn create-user :- c.schenata/User [name :- s/Str, cpf :- s/Str]
@@ -27,19 +27,18 @@
       (throw (Exception. "O CPF do usuário precisa ser informado."))))
 
   (let [cpf-already-used (user-db/is-cpf-already-in-use? (db/connect-to-db) cpf)]
-
-    (println cpf-already-used)
-    (println (type cpf-already-used))
-
     (if cpf-already-used
       (throw (Exception. "O CPF informado já está em uso.")))))
+
+(s/defn send-user-created-event [user]
+  (c.kafka-producer/send-message "cardlimit.created.user" (str user)))
 
 (s/defn save-user :- c.schenata/User [name, cpf]
   (validate-user name cpf)
 
   (let [user (create-user name cpf)]
     @(d/transact (db/connect-to-db) [user])
-    (c.score-http-manager/calculate-score user)
+    (send-user-created-event user)
     user))
 
 (defn list-users []        (user-db/query    (db/connect-to-db)))

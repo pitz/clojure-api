@@ -1,4 +1,4 @@
-(ns cardlimit.httprequest.score-api-manager
+(ns cardlimit.integration.score-api-manager
   (:use clojure.pprint)
   (:require [clj-http.client :as client]))
 
@@ -9,3 +9,4 @@
   (let [request-body-info {:id (get user :user/id) :cpf (get user :user/cpf)}
         response          (client/post (str score-api-base-url score-api-path) {:form-params request-body-info :content-type :json})]
     (println response)))
+
