@@ -17,5 +17,5 @@
         con-defaults {:keywords? true :port con-port}
         con-message  (str "API running at http:/127.0.0.1:" con-port "/")]
     (server/run-server (wrap-defaults #'c.routes/app-routes api-defaults) con-defaults)
-    (c.kafka-consumer/consume)
+    ; (c.kafka-consumer/consume)
     (println con-message)))

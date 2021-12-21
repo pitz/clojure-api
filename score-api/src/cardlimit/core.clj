@@ -1,10 +1,11 @@
 (ns cardlimit.core
   (:use clojure.pprint)
-  (:require [cardlimit.db.config-db    :as db]
-            [cardlimit.routes.routes  :as c.routes]
-            [org.httpkit.server       :as server]
-            [compojure.core           :refer :all]
-            [ring.middleware.defaults :refer :all])
+  (:require [cardlimit.db.config-db                     :as db]
+            [cardlimit.routes.routes                   :as c.routes]
+            [cardlimit.integration.kafka.consumerlogic :as c.kafka-consumer]
+            [org.httpkit.server                        :as server]
+            [compojure.core                            :refer :all]
+            [ring.middleware.defaults                  :refer :all])
   (:gen-class))
 
 ;(db/apagar-bd)
@@ -16,4 +17,5 @@
         con-defaults {:keywords? true :port con-port}
         con-message  (str "API running at http:/127.0.0.1:" con-port "/")]
     (server/run-server (wrap-defaults #'c.routes/app-routes api-defaults) con-defaults)
+    (c.kafka-consumer/consume)
     (println con-message)))
