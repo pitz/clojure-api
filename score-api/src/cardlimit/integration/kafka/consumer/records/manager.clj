@@ -18,7 +18,7 @@
 
   (build-consumer [this server-url]
     (let [consumer-props {"bootstrap.servers",  server-url
-                          "group.id",           "example"
+                          "group.id",           "score-api"
                           "key.deserializer",   StringDeserializer
                           "value.deserializer", StringDeserializer
                           "auto.offset.reset",  "earliest"
