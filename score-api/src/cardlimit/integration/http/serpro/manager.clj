@@ -1,16 +1,14 @@
-(ns cardlimit.integration.http.serasa.manager
+(ns cardlimit.integration.http.serpro.manager
   (:use clojure.pprint)
   (:require [clj-http.client   :as client]
-            [clojure.data.json :as json]
-            [schema.core       :as s]))
+            [clojure.data.json :as json]))
 
-(def score-api-base-url "http://127.0.0.1:3006")
+(def score-api-base-url "http://127.0.0.1:3007")
 (def score-api-path     "/scores")
 
-(s/defn calculate-score :- s/Num
-  [user-id :- s/Uuid, user-cpf :- s/Str]
+(defn calculate-score [user-id user-cpf]
   (let [request-body-info {:id user-id :cpf user-cpf}
         response          (client/post (str score-api-base-url score-api-path) {:form-params request-body-info :content-type :json})
         response-body     (get response :body)
-        score             (get (json/read-str response-body) "score")]
+        score             (get (json/read-str response-body) "score-idx")]
     score))

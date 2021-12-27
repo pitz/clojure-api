@@ -18,7 +18,7 @@
     (let [request-body (utils/get-body req)
           user-id      (get request-body :id)
           user-cpf     (get request-body :cpf)
-          score        (c.scorelogic/analyse-user user-id user-cpf)]
+          score        (c.scorelogic/analyse-user! user-id user-cpf)]
       {:status  200
        :headers {"Content-Type" "text/json"}
        :body    (-> (str (json/write-str score)))})

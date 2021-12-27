@@ -40,8 +40,11 @@
       (while true
         (let [records (.poll consumer (Duration/ofMillis 100))]
           (doseq [record records]
-            (let [user-id  (get (json/read-str (str (.value record))) "id")
-                  user-cpf (get (json/read-str (str (.value record))) "cpf")]
-              (c.scorelogic/analyse-user user-id user-cpf))
 
+            (try (let [user-id  (get (json/read-str (str (.value record))) "id")
+                       user-cpf (get (json/read-str (str (.value record))) "cpf")]
+                   (c.scorelogic/analyse-user! user-id user-cpf))
+                 (catch Exception e
+                   (println "expression 3 throws" e)
+                   (throw (Exception. "Erro ao processar fila!"))))
             (.commitAsync consumer)))))))

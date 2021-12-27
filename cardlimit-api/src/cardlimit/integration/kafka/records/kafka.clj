@@ -50,4 +50,5 @@
       (KafkaProducer. producer-props)))
 
   (send-message [this producer topic message-key message]
-    @(.send producer (ProducerRecord. topic message-key message))))
+    (let [record (ProducerRecord. topic message-key message)]
+    @(.send producer record))))

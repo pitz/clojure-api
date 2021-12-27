@@ -5,9 +5,11 @@
 
 (s/set-fn-validation! true)
 
-(def starter-user-values  { :userscore/band :starter  :userscore/initial-limit 50.00M    })
-(def gold-user-values     { :userscore/band :gold     :userscore/initial-limit 650.00M   })
-(def platinum-user-values { :userscore/band :platinum :userscore/initial-limit 1550.00M  })
-(def upmarket-user-values { :userscore/band :upmarket :userscore/initial-limit 12050.50M })
+(def starter-user-values  { :band :starter  :initial-limit 50.00M    })
+(def gold-user-values     { :band :gold     :initial-limit 650.00M   })
+(def platinum-user-values { :band :platinum :initial-limit 1550.00M  })
+(def upmarket-user-values { :band :upmarket :initial-limit 12050.50M })
 
-(defn new-uuid [] (java.util.UUID/randomUUID))
+(def gold-user-minimum-score     10)
+(def platinum-user-minimum-score 50)
+(def upmarket-user-minimum-score 90)

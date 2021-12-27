@@ -13,14 +13,16 @@
 (defn uuid-from-string [data]
   (UUID/fromString (clojure.string/replace data #"(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})" "$1-$2-$3-$4-$5")))
 
-; herlper-methods
-(defn ge-0? [x] (>= x 0))
-(defn valid-band? [band](some #(= band %) [:starter :gold :platinum :upmarket]))
+; constraint-methods
+(defn ge-0?          [x]   (>= x 0))
+(defn valid-band?    [band](some #(= band %) [:starter :gold :platinum :upmarket]))
+(defn valid-partner? [band](some #(= band %) [:serasa :serpro]))
 
 ; schema-methods
 (def PosInt            (s/pred pos-int? 'inteiro-positivo))
 (def Band              (s/constrained s/Keyword valid-band?))
 (def NonNegativeNumber (s/constrained s/Num ge-0?))
+(def Partner           (s/constrained s/Keyword valid-partner?))
 
 ; InputStream to String
 (defn is->str [is]
@@ -30,3 +32,4 @@
 (defn get-parameter [req pname] (get (:params req) pname))
 (defn get-body      [req] (json/read-str (is->str (:body req)) :key-fn keyword))
 
+(defn log-analysis [user-cpf] (println "[>] Calculando score para o CPF" user-cpf "."))
