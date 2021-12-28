@@ -8,7 +8,7 @@
             [ring.middleware.defaults                   :refer :all])
   (:gen-class))
 
-;(db/apagar-bd)
+; (db/apagar-bd)
 (def conn (db/connect-to-db))
 (db/cria-schema conn)
 

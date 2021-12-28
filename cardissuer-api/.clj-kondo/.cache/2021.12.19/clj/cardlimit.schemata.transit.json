@@ -1,0 +1,1 @@
+["^ ","~$ScoreBatch",["^ ","~:row",6,"~:col",1,"~:name","^0","~:ns","~$cardissuer.schemata","~:top-ns","^5"],"~$PartnerScore",["^ ","^1",12,"^2",1,"^3","^7","^4","^5","^6","^5"],"~$schema",["^ ","^1",17,"^2",1,"^3","^8","^4","^5","^6","^5"],"~:filename","/Users/eduardo.pitz/dev/learning/api/clojure-api/cardissuer-api/src/cardissuer/schemata.clj"]

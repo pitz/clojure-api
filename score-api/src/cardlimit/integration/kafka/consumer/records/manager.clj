@@ -1,8 +1,9 @@
 (ns cardlimit.integration.kafka.consumer.records.manager
   (:gen-class)
   (:require [cardlimit.integration.kafka.consumer.protocols.manager-protocol :as c.kafkaprotocol]
-            [clojure.data.json                                               :as json]
-            [cardlimit.score.scorelogic                                      :as c.scorelogic])
+            [clojure.data.json :as json]
+            [cardlimit.score.scorelogic :as c.scorelogic]
+            [cardlimit.utils.utils :as utils])
   (:import  [org.apache.kafka.clients.admin AdminClientConfig NewTopic KafkaAdminClient]
             org.apache.kafka.clients.consumer.KafkaConsumer
             [org.apache.kafka.common.serialization StringDeserializer]
@@ -30,7 +31,7 @@
 
   (run-consumer [this server-url]
     (let [consumer-topic   "cardlimit.created.user"
-          producer-topic   "example-produced-topic"
+          producer-topic   "score-api-consumer"
           bootstrap-server server-url
           consumer         (c.kafkaprotocol/build-consumer this bootstrap-server)]
 
@@ -45,6 +46,6 @@
                        user-cpf (get (json/read-str (str (.value record))) "cpf")]
                    (c.scorelogic/analyse-user! user-id user-cpf))
                  (catch Exception e
-                   (println "expression 3 throws" e)
+                   (utils/log-error e "Erro desconhecido ao processar evento")
                    (throw (Exception. "Erro ao processar fila!"))))
             (.commitAsync consumer)))))))

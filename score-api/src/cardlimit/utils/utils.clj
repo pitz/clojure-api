@@ -32,4 +32,7 @@
 (defn get-parameter [req pname] (get (:params req) pname))
 (defn get-body      [req] (json/read-str (is->str (:body req)) :key-fn keyword))
 
-(defn log-analysis [user-cpf] (println "[>] Calculando score para o CPF" user-cpf "."))
+(defn now [] (new java.util.Date))
+
+(defn log-analysis [user-cpf]  (println "[>] Calculando score para o CPF" user-cpf "."))
+(defn log-error    [exception message] (println "[ERROR]" (now) "-" message exception))

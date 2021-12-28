@@ -1,14 +1,14 @@
 (ns cardlimit.score.scorelogic
   (:use clojure.pprint)
-  (:require [cardlimit.score.records.serasa.scorelogic :as c.serasa-scorelogic]
-            [cardlimit.score.records.serpro.scorelogic :as c.serpro-scorelogic]
-            [cardlimit.score.protocols.score           :as c.score]
-            [cardlimit.db.config-db                     :as db]
-            [cardlimit.model                           :as c.model]
-            [cardlimit.schemata                        :as c.schemata]
-            [cardlimit.utils.utils                     :as utils]
-            [schema.core                               :as s]
-            [datomic.api                               :as d])
+  (:require [cardlimit.score.records.serasa.scorelogic  :as c.serasa-scorelogic]
+            [cardlimit.score.records.serpro.scorelogic  :as c.serpro-scorelogic]
+            [cardlimit.integration.kafka.producer.logic :as c.producer]
+            [cardlimit.score.protocols.score            :as c.score]
+            [cardlimit.db.config-db                      :as db]
+            [cardlimit.model                            :as c.model]
+            [cardlimit.utils.utils                      :as utils]
+            [schema.core                                :as s]
+            [datomic.api                                :as d])
   (:import (java.util UUID)))
 
 (s/defn save-batch! [user-id :- s/Str, user-cpf :- s/Str]
@@ -20,8 +20,23 @@
     batch))
 
 (s/defn save-analysis! [batch, band :- s/Keyword, initial-limit :- s/Num]
-  (d/transact (db/connect-to-db) [[:db/add (get batch :score-batch/id) :score-batch/band band]
-                                  [:db/add (get batch :score-batch/id) :score-batch/initial-limit initial-limit]]))
+  (println " @ save-analysis ")
+  (println " @ save-analysis ")
+  (println " @ save-analysis ")
+  (println " @ save-analysis ")
+  (println " @ save-analysis " band)
+  (println " @ save-analysis " (get batch :score-batch/id))
+  (println " @ save-analysis " (class (get batch :score-batch/id)))
+
+  ;(println " @ 1 ")
+  ;(println @(d/transact (db/connect-to-db) [[:db/add {:score-batch/id (get batch :score-batch/id)} :score-batch/band band]]))
+  ;(println " @ 2 ")
+  ;(println @(d/transact (db/connect-to-db) [[:db/add :score-batch/id (get batch :score-batch/id) :score-batch/initial-limit initial-limit]]))
+
+  (println " @ send-message ")
+  (c.producer/send-message "score-api.user-scored" "informar-algo-aqui :)")
+
+  (println " @ feito "))
 
 (s/defn process-analysis! [batch, calculators]
   (let [user-id            (:score-batch/user-id batch)
