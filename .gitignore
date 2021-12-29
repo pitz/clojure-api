@@ -4,6 +4,7 @@ pom.xml.asc
 *.class
 *.xml
 *.mdb
+*.iml
 *cache*
 *.json
 *.DS_Store
