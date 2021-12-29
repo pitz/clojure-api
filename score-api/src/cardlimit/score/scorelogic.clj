@@ -4,6 +4,7 @@
             [cardlimit.score.records.serpro.scorelogic  :as c.serpro-scorelogic]
             [cardlimit.integration.kafka.producer.logic :as c.producer]
             [cardlimit.score.protocols.score            :as c.score]
+            [cardlimit.db.query                         :as c.query]
             [cardlimit.db.config-db                      :as db]
             [cardlimit.model                            :as c.model]
             [cardlimit.utils.utils                      :as utils]
@@ -15,28 +16,16 @@
   (let [batch {:score-batch/id       (UUID/randomUUID)
                :score-batch/user-id  (UUID/fromString user-id)
                :score-batch/user-cpf user-cpf}]
-    (println @(d/transact (db/connect-to-db) [batch]))
-
+    @(d/transact (db/connect-to-db) [batch])
     batch))
 
 (s/defn save-analysis! [batch, band :- s/Keyword, initial-limit :- s/Num]
-  (println " @ save-analysis ")
-  (println " @ save-analysis ")
-  (println " @ save-analysis ")
-  (println " @ save-analysis ")
-  (println " @ save-analysis " band)
-  (println " @ save-analysis " (get batch :score-batch/id))
-  (println " @ save-analysis " (class (get batch :score-batch/id)))
+  (let [batch    (c.query/get-batch (d/db (db/connect-to-db)) (get batch :score-batch/id))
+        batch-id (:db/id batch)]
+    @(d/transact (db/connect-to-db) [[:db/add batch-id :score-batch/band band]])
+    @(d/transact (db/connect-to-db) [[:db/add batch-id :score-batch/initial-limit initial-limit]]))
 
-  ;(println " @ 1 ")
-  ;(println @(d/transact (db/connect-to-db) [[:db/add {:score-batch/id (get batch :score-batch/id)} :score-batch/band band]]))
-  ;(println " @ 2 ")
-  ;(println @(d/transact (db/connect-to-db) [[:db/add :score-batch/id (get batch :score-batch/id) :score-batch/initial-limit initial-limit]]))
-
-  (println " @ send-message ")
-  (c.producer/send-message "score-api.user-scored" "informar-algo-aqui :)")
-
-  (println " @ feito "))
+  (c.producer/send-message "score-api.user-scored" "informar-algo-aqui :)"))
 
 (s/defn process-analysis! [batch, calculators]
   (let [user-id            (:score-batch/user-id batch)
