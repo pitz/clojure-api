@@ -13,4 +13,5 @@ Aqui nós temos dois serviços: um é responsável pelo cadastro de um usuário 
 - [cheshire](https://github.com/dakrone/cheshire)
 
 #### Fluxo
-![Untitled(2)](https://user-images.githubusercontent.com/42384045/147689656-aa377544-73a1-49c0-a1bd-df4ed1123934.jpg)
+![Untitled(3)](https://user-images.githubusercontent.com/42384045/147689775-f0524a14-697b-4670-84ce-a92427275024.jpg)
+
